@@ -9,9 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "usr")
-public class User implements UserDetails  {
-
-
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,10 +17,10 @@ public class User implements UserDetails  {
     private String password;
     private boolean active;
 
-    @ElementCollection(targetClass = ROLE.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<ROLE> roles;
+    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -81,11 +79,11 @@ public class User implements UserDetails  {
         this.active = active;
     }
 
-    public Set<ROLE> getRoles() { return roles; }
-
-    public void setRoles(Set<ROLE> role) {
-        this.roles = roles;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }
