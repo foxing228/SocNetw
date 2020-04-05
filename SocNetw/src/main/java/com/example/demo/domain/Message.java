@@ -1,14 +1,19 @@
 package com.example.demo.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
-
+    private Long id;
+    @NotBlank(message = "please enter field")
+    @Length(max = 2048, message = "Too long")
     private String text;
+    @Length(max = 255, message = "Too long tag")
     private String tag;
 
     public String getFilename() {
@@ -54,11 +59,11 @@ public class Message {
         return text;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

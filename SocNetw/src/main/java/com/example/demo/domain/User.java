@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
@@ -13,14 +15,33 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank(message = "Username can not be empty")
     private String username;
+
+    @NotBlank(message = "Password can not be empty")
     private String password;
+
+
+
     private boolean active;
+
+    @Email
+    @NotBlank(message = "Email can not be empty")
+    private String email;
+    private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Message> messages;
+
+    public boolean isAdmin() {
+        return roles.contains(Role.ADMIN);
+    }
 
     public Long getId() {
         return id;
@@ -87,7 +108,25 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public boolean isAdmin() {
-        return roles.contains(Role.ADMIN);
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) { this.activationCode = activationCode; }
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
     }
 }
